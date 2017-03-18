@@ -1,0 +1,26 @@
+{
+    "name": "quasiForm",
+    "lowCaseName": "quasiform",
+    "description": "A MODX Revolution extra.",
+    "author": "mishantrop",
+    "version": "2.1.0",
+    "package":{
+        "elements": {
+            "snippets": [{
+                "name": "quasiEmail"
+            },{
+                "name": "quasiForm"
+            },{
+                "name": "quasiLinksList"
+            },{
+                "name": "quasiRecaptcha"
+            },{
+                "name": "quasiRemember"
+            },{
+                "name": "quasiSms"
+            },{
+                "name": "quasiUpload"
+            },]
+        }
+    }
+}

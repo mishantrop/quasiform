@@ -1,0 +1,5 @@
+Changelog for quasiForm.
+
+quasiForm 2.1.0 pl
+==============
+* Code.
