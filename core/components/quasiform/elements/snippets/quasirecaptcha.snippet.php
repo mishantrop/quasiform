@@ -1,40 +1,40 @@
 <?php
-$messageError = $modx->getOption('messageError', $scriptProperties, 'Òû ðîáîò');
+$messageError = $modx->getOption('messageError', $scriptProperties, 'Ð¢Ñ‹ Ñ€Ð¾Ð±Ð¾Ñ‚');
 
-$response = array(
-	'errors' => array(),
+$response = [
+	'errors' => [],
 	'success' => false,
 	'message' => '',
-	'messages' => array(),
-);
+	'messages' => [],
+];
 
 /**
- * Êëþ÷
+ * ÐšÐ»ÑŽÑ‡
  */
 $key = $modx->getOption('key', $scriptProperties, false);
 /**
- * Ñåêðåòíûé êëþ÷
+ * Ð¡ÐµÐºÑ€ÐµÑ‚Ð½Ñ‹Ð¹ ÐºÐ»ÑŽÑ‡
  */
 $secret = $modx->getOption('secret', $scriptProperties, false);
 /**
- * Ðåæèì îòëàäêè
- * Åñëè âêëþ÷¸í, òî â æóðíàë îøèáîê çàïèñûâàåòñÿ îòëàäî÷íàÿ èíôîðìàöèÿ
+ * Ð ÐµÐ¶Ð¸Ð¼ Ð¾Ñ‚Ð»Ð°Ð´ÐºÐ¸
+ * Ð•ÑÐ»Ð¸ Ð²ÐºÐ»ÑŽÑ‡Ñ‘Ð½, Ñ‚Ð¾ Ð² Ð¶ÑƒÑ€Ð½Ð°Ð» Ð¾ÑˆÐ¸Ð±Ð¾Ðº Ð·Ð°Ð¿Ð¸ÑÑ‹Ð²Ð°ÐµÑ‚ÑÑ Ð¾Ñ‚Ð»Ð°Ð´Ð¾Ñ‡Ð½Ð°Ñ Ð¸Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸Ñ
  */
 $debug = $modx->getOption('debug', $scriptProperties, false);
 
 if (!function_exists('sendRecaptchaRequest')) {
 	/**
-	 * Ôóíêöèÿ îòïðàâêè çàïðîñà íà âåðèôèêàöèþ reCAPTCHA
+	 * Ð¤ÑƒÐ½ÐºÑ†Ð¸Ñ Ð¾Ñ‚Ð¿Ñ€Ð°Ð²ÐºÐ¸ Ð·Ð°Ð¿Ñ€Ð¾ÑÐ° Ð½Ð° Ð²ÐµÑ€Ð¸Ñ„Ð¸ÐºÐ°Ñ†Ð¸ÑŽ reCAPTCHA
 	 */
 	function sendRecaptchaRequest($secret, $response, $remoteip) {
 		$ch = curl_init('https://www.google.com/recaptcha/api/siteverify');
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
 		curl_setopt($ch, CURLOPT_TIMEOUT, 4);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, array(
+		curl_setopt($ch, CURLOPT_POSTFIELDS, [
 			"secret"   => $secret,
 			"response" => $response,
 			"remoteip" => $remoteip,
-		));
+		]);
 		$data = curl_exec($ch);
 		curl_close($ch);
 		return $data;

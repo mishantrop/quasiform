@@ -1,12 +1,12 @@
 <?php
 /**
- * Параметры
- * @param fields Поля в формате JSON
- * @param hooks Сниппеты в формате JSON, вызываемые во время исполнения текущего сниппета 
+ * РџР°СЂР°РјРµС‚СЂС‹
+ * @param fields РџРѕР»СЏ РІ С„РѕСЂРјР°С‚Рµ JSON
+ * @param hooks РЎРЅРёРїРїРµС‚С‹ РІ С„РѕСЂРјР°С‚Рµ JSON, РІС‹Р·С‹РІР°РµРјС‹Рµ РІРѕ РІСЂРµРјСЏ РёСЃРїРѕР»РЅРµРЅРёСЏ С‚РµРєСѓС‰РµРіРѕ СЃРЅРёРїРїРµС‚Р° 
  */
 $fields = $modx->fromJSON($modx->getOption('fields', $scriptProperties, false));
-$messageSuccess = $modx->getOption('messageSuccess', $scriptProperties, 'Ваше сообщение успешно отправлено. Спасибо.');
-$messageError = $modx->getOption('messageError', $scriptProperties, 'Форма заполнена с ошибками. Исправьте их и отправьте снова.');
+$messageSuccess = $modx->getOption('messageSuccess', $scriptProperties, 'Р’Р°С€Рµ СЃРѕРѕР±С‰РµРЅРёРµ СѓСЃРїРµС€РЅРѕ РѕС‚РїСЂР°РІР»РµРЅРѕ. РЎРїР°СЃРёР±Рѕ.');
+$messageError = $modx->getOption('messageError', $scriptProperties, 'Р¤РѕСЂРјР° Р·Р°РїРѕР»РЅРµРЅР° СЃ РѕС€РёР±РєР°РјРё. РСЃРїСЂР°РІСЊС‚Рµ РёС… Рё РѕС‚РїСЂР°РІСЊС‚Рµ СЃРЅРѕРІР°.');
 $hooks = $modx->fromJSON($modx->getOption('hooks', $scriptProperties, false));
 $debug = $modx->getOption('debug', $scriptProperties, false);
 
@@ -14,10 +14,10 @@ $placeholders = array();
 
 $post = $_POST;
 /**
- * Ответ, возвращаемый в формате JSON
+ * РћС‚РІРµС‚, РІРѕР·РІСЂР°С‰Р°РµРјС‹Р№ РІ С„РѕСЂРјР°С‚Рµ JSON
  */
 $response = [
-	'author' => 'Михаил Серышев — quasi-art.ru',
+	'author' => 'РњРёС…Р°РёР» РЎРµСЂС‹С€РµРІ вЂ” quasi-art.ru',
 	'errors' => [],
 	'field_errors' => [],
 	'messages' => [],
@@ -26,7 +26,7 @@ $response = [
 $errorsHTML = '';
 
 /**
- * Массив имён полей с правилами проверки
+ * РњР°СЃСЃРёРІ РёРјС‘РЅ РїРѕР»РµР№ СЃ РїСЂР°РІРёР»Р°РјРё РїСЂРѕРІРµСЂРєРё
  */
 if (is_array($fields)) {
 	foreach ($fields as $fieldName => &$fieldProperties) {
@@ -34,7 +34,7 @@ if (is_array($fields)) {
 			$response['debug'][] = 'field: '.$fieldName;
 		}
 		/**
-		 * Перебор правил проверки одного поля
+		 * РџРµСЂРµР±РѕСЂ РїСЂР°РІРёР» РїСЂРѕРІРµСЂРєРё РѕРґРЅРѕРіРѕ РїРѕР»СЏ
 		 */
 		$fieldLabel = (isset($fieldProperties['label'])) ? $fieldProperties['label'] : '';
 		$fieldValue = (isset($post[$fieldName])) ? $post[$fieldName] : '';
@@ -44,59 +44,59 @@ if (is_array($fields)) {
 			}
 			switch ($fieldPropertyName) {
 				/**
-				 * Валидаторы
+				 * Р’Р°Р»РёРґР°С‚РѕСЂС‹
 				 */
 				case 'blank':
 				    /**
-				     * Поле должно быть пустым
+				     * РџРѕР»Рµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј
 				     */
 					if (!empty($fieldValue)) {
-						$response['errors'][] = 'Ошибка заполнения формы';
+						$response['errors'][] = 'РћС€РёР±РєР° Р·Р°РїРѕР»РЅРµРЅРёСЏ С„РѕСЂРјС‹';
 					}
 					break;
 				case 'email':
 				    /**
-				     * Поле должно быть адресом электроной почты
-				     * Пустое значение не проверяется (можно комбинировать с required)
+				     * РџРѕР»Рµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р°РґСЂРµСЃРѕРј СЌР»РµРєС‚СЂРѕРЅРѕР№ РїРѕС‡С‚С‹
+				     * РџСѓСЃС‚РѕРµ Р·РЅР°С‡РµРЅРёРµ РЅРµ РїСЂРѕРІРµСЂСЏРµС‚СЃСЏ (РјРѕР¶РЅРѕ РєРѕРјР±РёРЅРёСЂРѕРІР°С‚СЊ СЃ required)
 				     */
 					if (!empty($fieldValue)) {
 						if (!filter_var($fieldValue, FILTER_VALIDATE_EMAIL)) {
-							$response['field_errors'][$fieldName][] = 'Поле «'.$fieldLabel.'» должно быть адресом электронной почты';
+							$response['field_errors'][$fieldName][] = 'РџРѕР»Рµ В«'.$fieldLabel.'В» РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р°РґСЂРµСЃРѕРј СЌР»РµРєС‚СЂРѕРЅРЅРѕР№ РїРѕС‡С‚С‹';
 						}
 					}
 				/**
-				 * Значение поля должно быть равно какому-то определённому значению
+				 * Р—РЅР°С‡РµРЅРёРµ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СЂР°РІРЅРѕ РєР°РєРѕРјСѓ-С‚Рѕ РѕРїСЂРµРґРµР»С‘РЅРЅРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ
 				 * "equal":"2015"
 				 */
 				case 'equal':
 				case 'equals':
 					if ($fieldValue != $fieldPropertyValue) {
-						$response['errors'][] = 'Ошибка заполнения формы';
+						$response['errors'][] = 'РћС€РёР±РєР° Р·Р°РїРѕР»РЅРµРЅРёСЏ С„РѕСЂРјС‹';
 					}
 
 					break;
 				case 'length':
 					if (strlen($fieldValue) != strlen($fieldPropertyValue)) {
-					  	$response['field_errors'][$fieldName][] = 'Количество символов для поля «'.$fieldLabel.'» должно быть равно '.$fieldPropertyValue;
+					  	$response['field_errors'][$fieldName][] = 'РљРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ РґР»СЏ РїРѕР»СЏ В«'.$fieldLabel.'В» РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СЂР°РІРЅРѕ '.$fieldPropertyValue;
 					}
 					break;
 				case 'minlength':
 					if (strlen($fieldValue) < $fieldPropertyValue) {
-						$response['field_errors'][$fieldName][] = 'Количество символов для поля «'.$fieldLabel.'» ('.strlen($fieldValue).') должно быть не менее '.$fieldPropertyValue;
+						$response['field_errors'][$fieldName][] = 'РљРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ РґР»СЏ РїРѕР»СЏ В«'.$fieldLabel.'В» ('.strlen($fieldValue).') РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РЅРµ РјРµРЅРµРµ '.$fieldPropertyValue;
 					}
 					break;
 				case 'maxlength':
 					if (strlen($fieldValue) > $fieldPropertyValue) {
-						$response['field_errors'][$fieldName][] = 'Превышено количество символов для поля «'.$fieldLabel.'»: '.strlen($fieldValue).'/'.$fieldPropertyValue;
+						$response['field_errors'][$fieldName][] = 'РџСЂРµРІС‹С€РµРЅРѕ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ РґР»СЏ РїРѕР»СЏ В«'.$fieldLabel.'В»: '.strlen($fieldValue).'/'.$fieldPropertyValue;
 					}
 					break;
 				case 'required':
 					if (empty($fieldValue) && $fieldPropertyValue) {
-						$response['field_errors'][$fieldName][] = 'Поле «'.$fieldLabel.'» обязательно для заполнения';
+						$response['field_errors'][$fieldName][] = 'РџРѕР»Рµ В«'.$fieldLabel.'В» РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ';
 					}
 					break;
 				/**
-				 * Модификаторы
+				 * РњРѕРґРёС„РёРєР°С‚РѕСЂС‹
 				 */
 				case 'strip_tags':
 					$fieldValue = ($fieldPropertyValue) ? strip_tags($fieldValue) : $fieldValue;
@@ -113,7 +113,7 @@ if (is_array($fields)) {
 		}
 	
 		/**
-		 * Установка плейсхолдеров для передачи в шаблон письма
+		 * РЈСЃС‚Р°РЅРѕРІРєР° РїР»РµР№СЃС…РѕР»РґРµСЂРѕРІ РґР»СЏ РїРµСЂРµРґР°С‡Рё РІ С€Р°Р±Р»РѕРЅ РїРёСЃСЊРјР°
 		 */
 		$placeholders[$fieldName] = $fieldValue;
 	}
@@ -123,16 +123,16 @@ if (is_array($fields)) {
 	}
 }
 
-// Если поля прошли валидацию, то вызываются плагины-сниппеты
+// Р•СЃР»Рё РїРѕР»СЏ РїСЂРѕС€Р»Рё РІР°Р»РёРґР°С†РёСЋ, С‚Рѕ РІС‹Р·С‹РІР°СЋС‚СЃСЏ РїР»Р°РіРёРЅС‹-СЃРЅРёРїРїРµС‚С‹
 if (!count($response['errors']) && !count($response['field_errors'])) {
-	// Список плагинов-сниппетов, которые должны выполниться после валидации полей
+	// РЎРїРёСЃРѕРє РїР»Р°РіРёРЅРѕРІ-СЃРЅРёРїРїРµС‚РѕРІ, РєРѕС‚РѕСЂС‹Рµ РґРѕР»Р¶РЅС‹ РІС‹РїРѕР»РЅРёС‚СЊСЃСЏ РїРѕСЃР»Рµ РІР°Р»РёРґР°С†РёРё РїРѕР»РµР№
 	if (is_array($hooks)) {
 		foreach ($hooks as $hookName => &$hookProperties) {
 			if ($debug) {
 				$response['hooks'][] = $hookName;
 			}
 			/**
-			 * Параметры для передачи в плагин-сниппет
+			 * РџР°СЂР°РјРµС‚СЂС‹ РґР»СЏ РїРµСЂРµРґР°С‡Рё РІ РїР»Р°РіРёРЅ-СЃРЅРёРїРїРµС‚
 			 */
 			if (is_array($hookProperties)) {
 				$properties = array_merge($hookProperties, array('placeholders' => $placeholders));
@@ -143,7 +143,7 @@ if (!count($response['errors']) && !count($response['field_errors'])) {
 				$response['properties'][] = $properties;
 			}
 			/**
-			 * Вызов плагина-сниппета
+			 * Р’С‹Р·РѕРІ РїР»Р°РіРёРЅР°-СЃРЅРёРїРїРµС‚Р°
 			 */
 			$hookResponse = $modx->runSnippet($hookName, $properties);
 			if (is_array($hookResponse)) {
@@ -163,7 +163,7 @@ if (!count($response['errors']) && !count($response['field_errors'])) {
 					}
 				}
 				/**
-				 * Если плагин-сниппет завершился ошибкой, прекращается выполнение последующих плагинов
+				 * Р•СЃР»Рё РїР»Р°РіРёРЅ-СЃРЅРёРїРїРµС‚ Р·Р°РІРµСЂС€РёР»СЃСЏ РѕС€РёР±РєРѕР№, РїСЂРµРєСЂР°С‰Р°РµС‚СЃСЏ РІС‹РїРѕР»РЅРµРЅРёРµ РїРѕСЃР»РµРґСѓСЋС‰РёС… РїР»Р°РіРёРЅРѕРІ
 				 */
 				if (!$hookResponse['success']) {
 					if ($debug) {
@@ -181,12 +181,12 @@ if (!count($response['errors']) && !count($response['field_errors'])) {
 	
 		}
 	} else {
-		$response['errors'][] = 'Неверный формат вызова плагинов quasiForm';
+		$response['errors'][] = 'РќРµРІРµСЂРЅС‹Р№ С„РѕСЂРјР°С‚ РІС‹Р·РѕРІР° РїР»Р°РіРёРЅРѕРІ quasiForm';
 	}
 }
 
 /**
- * Если плагины тоже выполнены успешно
+ * Р•СЃР»Рё РїР»Р°РіРёРЅС‹ С‚РѕР¶Рµ РІС‹РїРѕР»РЅРµРЅС‹ СѓСЃРїРµС€РЅРѕ
  */
 if (!count($response['errors']) && !count($response['field_errors'])) {
 	$response['success'] = true;
@@ -198,5 +198,5 @@ if ($response['success']) {
 	$response['errors'][] = $messageError;
 }
 
-// Результат работы скрипта в JSON-формате
+// Р РµР·СѓР»СЊС‚Р°С‚ СЂР°Р±РѕС‚С‹ СЃРєСЂРёРїС‚Р° РІ JSON-С„РѕСЂРјР°С‚Рµ
 return json_encode($response, JSON_UNESCAPED_UNICODE);

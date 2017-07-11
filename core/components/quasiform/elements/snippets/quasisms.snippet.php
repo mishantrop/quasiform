@@ -1,30 +1,30 @@
 <?php
 /**
- * Режим отладки
- * Сообщения складываются только в каталог /sms/%H%i%s.txt
+ * Р РµР¶РёРј РѕС‚Р»Р°РґРєРё
+ * РЎРѕРѕР±С‰РµРЅРёСЏ СЃРєР»Р°РґС‹РІР°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ РІ РєР°С‚Р°Р»РѕРі /sms/%H%i%s.txt
  */
 $debug = $modx->getOption('debug', $scriptProperties, false);
 
-$response = array(
+$response = [
 	'success' => false,
-	'errors' => array(),
-	'messages' => $modx->getOption('messages', $scriptProperties, array()),
-	'placeholders' => $modx->getOption('placeholders', $scriptProperties, array()),
-);
+	'errors' => [],
+	'messages' => $modx->getOption('messages', $scriptProperties, []),
+	'placeholders' => $modx->getOption('placeholders', $scriptProperties, []),
+];
 /**
- * API-ключ
+ * API-РєР»СЋС‡
  */
 $key = $modx->getOption('key', $scriptProperties, false);
 /**
- * Номер получателя
+ * РќРѕРјРµСЂ РїРѕР»СѓС‡Р°С‚РµР»СЏ
  */
 $to = $modx->getOption('to', $scriptProperties, false);
 /**
- * Текст сообщения
+ * РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ
  */
 $text = $modx->getOption('text', $scriptProperties, false);
 /**
- * Запрос, отправляемый сервису по отправке смс
+ * Р—Р°РїСЂРѕСЃ, РѕС‚РїСЂР°РІР»СЏРµРјС‹Р№ СЃРµСЂРІРёСЃСѓ РїРѕ РѕС‚РїСЂР°РІРєРµ СЃРјСЃ
  */
 $query = 'http://sms.ru/sms/send?api_id='.$key.'&to='.$to.'&text='.$text;
 
@@ -36,12 +36,12 @@ if (!function_exists('sendSms')) {
 			$ch = curl_init('http://sms.ru/sms/send');
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
 			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, array(
+			curl_setopt($ch, CURLOPT_POSTFIELDS, [
 				"api_id"		=>	$key,
 				"to"			=>	$to,
 				//"text"		=>	iconv("windows-1251', 'utf-8', $text")
 				"text"			=>	$text,
-			));
+			]);
 			$data = curl_exec($ch);
 			file_put_contents($_SERVER['DOCUMENT_ROOT'].'/sms/'.$to.'_answer.txt', $data);
 			curl_close($ch);
@@ -51,23 +51,23 @@ if (!function_exists('sendSms')) {
 }
 
 if (empty($key)) {
-	$response['errors'][] = 'Ошибка авторизации';
+	$response['errors'][] = 'РћС€РёР±РєР° Р°РІС‚РѕСЂРёР·Р°С†РёРё';
 }
 if (empty($to)) {
-	$response['errors'][] = 'Пустой номер телефона';
+	$response['errors'][] = 'РџСѓСЃС‚РѕР№ РЅРѕРјРµСЂ С‚РµР»РµС„РѕРЅР°';
 }
 if (empty($text)) {
-	$response['errors'][] = 'Пустое сообщение';
+	$response['errors'][] = 'РџСѓСЃС‚РѕРµ СЃРѕРѕР±С‰РµРЅРёРµ';
 }
 if (strlen($text) > 70) {
-	$response['errors'][] = 'Максимальная длина сообщения — 70 символов';
+	$response['errors'][] = 'РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РґР»РёРЅР° СЃРѕРѕР±С‰РµРЅРёСЏ вЂ” 70 СЃРёРјРІРѕР»РѕРІ';
 }
 
 if (!count($response['errors'])) {
 	if (sendSms($key, $to, $text, $debug)) {
 	  	$response['success'] = true;
 	} else {
-	  	$response['errors'][] = 'Не удалось отправить смс';
+	  	$response['errors'][] = 'РќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РїСЂР°РІРёС‚СЊ СЃРјСЃ';
 	}
 } else {
 

@@ -7,7 +7,7 @@ $response = [
 ];
 
 // Load the FormSave class
-$formSave = $modx->getService('formsave','FormSave', $modx->getOption('formsave.core_path', null, $modx->getOption('core_path').'components/formsave/').'model/formsave/', array());
+$formSave = $modx->getService('formsave','FormSave', $modx->getOption('formsave.core_path', null, $modx->getOption('core_path').'components/formsave/').'model/formsave/', []);
 
 $formTopic = $modx->getOption('fsFormTopic', $scriptProperties, 'form');
 $formFields = $modx->getOption('fsFormFields', $scriptProperties, false);
@@ -24,7 +24,7 @@ if ($formFields !== false) {
 $newForm = $modx->newObject('fsForm');
 
 // Build the data array
-$dataArray = array();
+$dataArray = [];
 
 $values = $_POST;
 
@@ -41,13 +41,13 @@ foreach($formFields as $field) {
 
 
 // Fill the database object
-$newForm->fromArray(array(
+$newForm->fromArray([
 	'topic' => $formTopic,
 	'time' => time(),
 	'published' => $formPublished,
 	'data' => $dataArray,
 	'ip' => $_SERVER['REMOTE_ADDR']
-));
+]);
 
 // Save the form
 if ($newForm->save()) {

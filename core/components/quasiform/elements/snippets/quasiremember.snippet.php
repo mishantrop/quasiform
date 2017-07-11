@@ -1,16 +1,16 @@
 <?php
 /**
- * Имя отправленного поля
- * Если передан этот параметр, то сниппет вернёт содержимое $_SESSION['quasiform']['key']
+ * РРјСЏ РѕС‚РїСЂР°РІР»РµРЅРЅРѕРіРѕ РїРѕР»СЏ
+ * Р•СЃР»Рё РїРµСЂРµРґР°РЅ СЌС‚РѕС‚ РїР°СЂР°РјРµС‚СЂ, С‚Рѕ СЃРЅРёРїРїРµС‚ РІРµСЂРЅС‘С‚ СЃРѕРґРµСЂР¶РёРјРѕРµ $_SESSION['quasiform']['key']
  */
 $key = $modx->getOption('key', $scriptProperties, false);
 /**
- * Режим отладки
+ * Р РµР¶РёРј РѕС‚Р»Р°РґРєРё
  */
 $debug = $modx->getOption('debug', $scriptProperties, false);
 
 /**
- * Вернуть значение из сессии
+ * Р’РµСЂРЅСѓС‚СЊ Р·РЅР°С‡РµРЅРёРµ РёР· СЃРµСЃСЃРёРё
  */
 if (strlen($key)) {
     if (isset($_SESSION['quasiform'])) {
@@ -21,19 +21,19 @@ if (strlen($key)) {
     return '';
 }
 
-$response = array(
-	'errors' => array(),
+$response = [
+	'errors' => [],
 	'success' => false,
 	'message' => '',
-	'messages' => array(),
-	'placeholders' => $modx->getOption('placeholders', $scriptProperties, array()),
-);
+	'messages' => [],
+	'placeholders' => $modx->getOption('placeholders', $scriptProperties, []),
+];
 
 /**
- * Занесение плейсхолдеров в сессию
+ * Р—Р°РЅРµСЃРµРЅРёРµ РїР»РµР№СЃС…РѕР»РґРµСЂРѕРІ РІ СЃРµСЃСЃРёСЋ
  */
 foreach ($response['placeholders'] as $placeholderKey => &$placeholderValue) {
-    /* Пока можно заполнять только строковые значения плейсхолдеров */
+    /* РџРѕРєР° РјРѕР¶РЅРѕ Р·Р°РїРѕР»РЅСЏС‚СЊ С‚РѕР»СЊРєРѕ СЃС‚СЂРѕРєРѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РїР»РµР№СЃС…РѕР»РґРµСЂРѕРІ */
     if (is_string($placeholderValue)) {
         $_SESSION['quasiform'][$placeholderKey] = $placeholderValue;
     }

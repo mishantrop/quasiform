@@ -1,12 +1,12 @@
 <?php
 /**
- * @param string $input Значение атрибута поля выбора файла
- * @param string $dir Каталог загрузки файлов
- * @param string $types Список расширений через запятую
- * @param string $size Максимальный размер каждого файла
- * @param string $mincount Минимальное количество файлов
- * @param string $maxcount Максимальное количество файлов
- * @param string $translit Нужно ли модифицировать имена файлов
+ * @param string $input Р—РЅР°С‡РµРЅРёРµ Р°С‚СЂРёР±СѓС‚Р° РїРѕР»СЏ РІС‹Р±РѕСЂР° С„Р°Р№Р»Р°
+ * @param string $dir РљР°С‚Р°Р»РѕРі Р·Р°РіСЂСѓР·РєРё С„Р°Р№Р»РѕРІ
+ * @param string $types РЎРїРёСЃРѕРє СЂР°СЃС€РёСЂРµРЅРёР№ С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ
+ * @param string $size РњР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СЂР°Р·РјРµСЂ РєР°Р¶РґРѕРіРѕ С„Р°Р№Р»Р°
+ * @param string $mincount РњРёРЅРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ С„Р°Р№Р»РѕРІ
+ * @param string $maxcount РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ С„Р°Р№Р»РѕРІ
+ * @param string $translit РќСѓР¶РЅРѕ Р»Рё РјРѕРґРёС„РёС†РёСЂРѕРІР°С‚СЊ РёРјРµРЅР° С„Р°Р№Р»РѕРІ
  */
 $input = $modx->getOption('field', $scriptProperties, false);
 $dir = $modx->getOption('dir', $scriptProperties, false);
@@ -24,15 +24,15 @@ if ($debug) {
 }
 
 /**
- * Ответ сниппета
+ * РћС‚РІРµС‚ СЃРЅРёРїРїРµС‚Р°
  */
-$response = array(
-	'errors' => array(),
+$response = [
+	'errors' => [],
 	'success' => false,
-	'files' => array(),
-	'messages' => array(),
-	'placeholders' => array(),
-);
+	'files' => [],
+	'messages' => [],
+	'placeholders' => [],
+];
 
 if (!function_exists('getFileUploadErrorDescription')) {
 	function getFileUploadErrorDescription($code = 0) {
@@ -40,25 +40,25 @@ if (!function_exists('getFileUploadErrorDescription')) {
 		
 		switch ($code) {
 		    case 1:
-		        $output = 'Размер принятого файла превысил максимально допустимый размер, который задан директивой upload_max_filesize конфигурационного файла php.ini';
+		        $output = 'Р Р°Р·РјРµСЂ РїСЂРёРЅСЏС‚РѕРіРѕ С„Р°Р№Р»Р° РїСЂРµРІС‹СЃРёР» РјР°РєСЃРёРјР°Р»СЊРЅРѕ РґРѕРїСѓСЃС‚РёРјС‹Р№ СЂР°Р·РјРµСЂ, РєРѕС‚РѕСЂС‹Р№ Р·Р°РґР°РЅ РґРёСЂРµРєС‚РёРІРѕР№ upload_max_filesize РєРѕРЅС„РёРіСѓСЂР°С†РёРѕРЅРЅРѕРіРѕ С„Р°Р№Р»Р° php.ini';
 		        break;
 		    case 2:
-		        $output = 'Размер загружаемого файла превысил значение MAX_FILE_SIZE, указанное в HTML-форме';
+		        $output = 'Р Р°Р·РјРµСЂ Р·Р°РіСЂСѓР¶Р°РµРјРѕРіРѕ С„Р°Р№Р»Р° РїСЂРµРІС‹СЃРёР» Р·РЅР°С‡РµРЅРёРµ MAX_FILE_SIZE, СѓРєР°Р·Р°РЅРЅРѕРµ РІ HTML-С„РѕСЂРјРµ';
 		        break;
 		    case 3:
-		        $output = 'Загружаемый файл был получен только частично.';
+		        $output = 'Р—Р°РіСЂСѓР¶Р°РµРјС‹Р№ С„Р°Р№Р» Р±С‹Р» РїРѕР»СѓС‡РµРЅ С‚РѕР»СЊРєРѕ С‡Р°СЃС‚РёС‡РЅРѕ.';
 		        break;
 		    case 4:
-		        $output = 'Файл не был загружен.';
+		        $output = 'Р¤Р°Р№Р» РЅРµ Р±С‹Р» Р·Р°РіСЂСѓР¶РµРЅ.';
 		        break;
 		    case 6:
-		        $output = 'Отсутствует временная папка.';
+		        $output = 'РћС‚СЃСѓС‚СЃС‚РІСѓРµС‚ РІСЂРµРјРµРЅРЅР°СЏ РїР°РїРєР°.';
 		        break;
 		    case 7:
-		        $output = 'Не удалось записать файл на диск.';
+		        $output = 'РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РїРёСЃР°С‚СЊ С„Р°Р№Р» РЅР° РґРёСЃРє.';
 		        break;
 		    case 8:
-		        $output = 'PHP-расширение остановило загрузку файла.';
+		        $output = 'PHP-СЂР°СЃС€РёСЂРµРЅРёРµ РѕСЃС‚Р°РЅРѕРІРёР»Рѕ Р·Р°РіСЂСѓР·РєСѓ С„Р°Р№Р»Р°.';
 		        break;
 		}
 		
@@ -68,10 +68,10 @@ if (!function_exists('getFileUploadErrorDescription')) {
 
 if (!function_exists('getFileExtension')) {
 	/**
-	 * Получение расширения файла
-	 * @param string $filename Имя файла
-	 * @param boolean $strtolower Привести символы к строчным
-	 * @return string Расширение файла
+	 * РџРѕР»СѓС‡РµРЅРёРµ СЂР°СЃС€РёСЂРµРЅРёСЏ С„Р°Р№Р»Р°
+	 * @param string $filename РРјСЏ С„Р°Р№Р»Р°
+	 * @param boolean $strtolower РџСЂРёРІРµСЃС‚Рё СЃРёРјРІРѕР»С‹ Рє СЃС‚СЂРѕС‡РЅС‹Рј
+	 * @return string Р Р°СЃС€РёСЂРµРЅРёРµ С„Р°Р№Р»Р°
 	 */
 	function getFileExtension($filename, $strtolower = true) {
 		if (!is_string($filename)) {
@@ -87,20 +87,20 @@ if (!function_exists('getFileExtension')) {
 
 if (!function_exists('genFilename')) {
 	/**
-	 * Генерация имени файла
-	 * @return string Имя файла без расширения
+	 * Р“РµРЅРµСЂР°С†РёСЏ РёРјРµРЅРё С„Р°Р№Р»Р°
+	 * @return string РРјСЏ С„Р°Р№Р»Р° Р±РµР· СЂР°СЃС€РёСЂРµРЅРёСЏ
 	 */
 	function genFilename() {
-		// Строка вида 1234567890_nu6tFrgh
+		// РЎС‚СЂРѕРєР° РІРёРґР° 1234567890_nu6tFrgh
 		return time().'_'.genPassword();
 	}
 }
 
 if (!function_exists('genPassword')) {
 	/**
-	 * Генерация последовательности случайных символов определённой длины
-	 * @param integer $length Длина строки
-	 * @return string $result Созданная строка
+	 * Р“РµРЅРµСЂР°С†РёСЏ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё СЃР»СѓС‡Р°Р№РЅС‹С… СЃРёРјРІРѕР»РѕРІ РѕРїСЂРµРґРµР»С‘РЅРЅРѕР№ РґР»РёРЅС‹
+	 * @param integer $length Р”Р»РёРЅР° СЃС‚СЂРѕРєРё
+	 * @return string $result РЎРѕР·РґР°РЅРЅР°СЏ СЃС‚СЂРѕРєР°
 	 */
 	function genPassword($length = 8) {
 		$chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -115,11 +115,11 @@ if (!function_exists('genPassword')) {
 
 $filesOriginal = $_FILES[$input];
 if ($debug) {
-	$modx->log(modX::LOG_LEVEL_ERROR, 'Загрузка файлов: '.print_r($_FILES[$input], true));
+	$modx->log(modX::LOG_LEVEL_ERROR, 'Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»РѕРІ: '.print_r($_FILES[$input], true));
 }
 
 /**
- * Создание более удобного массива загруженных файлов
+ * РЎРѕР·РґР°РЅРёРµ Р±РѕР»РµРµ СѓРґРѕР±РЅРѕРіРѕ РјР°СЃСЃРёРІР° Р·Р°РіСЂСѓР¶РµРЅРЅС‹С… С„Р°Р№Р»РѕРІ
  */
 for ($i = 0; $i < count($filesOriginal['name']); $i++) {
     $name = $filesOriginal['name'][$i];
@@ -129,7 +129,7 @@ for ($i = 0; $i < count($filesOriginal['name']); $i++) {
 	$size = $filesOriginal['size'][$i];
 	
 	/**
-	 * Если ни один файл не прикреплён
+	 * Р•СЃР»Рё РЅРё РѕРґРёРЅ С„Р°Р№Р» РЅРµ РїСЂРёРєСЂРµРїР»С‘РЅ
 	 */
 	$modx->log(modX::LOG_LEVEL_ERROR, 'quasiUpload['.$i.']: count = '.count($filesOriginal['name']).'; name: '.$name.' type: '.$type);
 	if (count($filesOriginal['name']) == 1 && empty($name) && empty($type) && empty($tmp_name) && $error == 4 && $size == 0) {
@@ -137,116 +137,116 @@ for ($i = 0; $i < count($filesOriginal['name']); $i++) {
 	    continue;
 	}
 	
-    $array = array(
+    $array = [
 		'name' => $filesOriginal['name'][$i],
 		'type' => $filesOriginal['type'][$i],
 		'tmp_name' => $filesOriginal['tmp_name'][$i],
 		'error' => $filesOriginal['error'][$i],
 		'size' => $filesOriginal['size'][$i],
-	);
+	];
 	$response['files'][] = $array;
 }
 /**
- * Если указано максимальное количество файлов, то количество загружаемых файлов не должно
- * превышать указанное ограничение
+ * Р•СЃР»Рё СѓРєР°Р·Р°РЅРѕ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ С„Р°Р№Р»РѕРІ, С‚Рѕ РєРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РіСЂСѓР¶Р°РµРјС‹С… С„Р°Р№Р»РѕРІ РЅРµ РґРѕР»Р¶РЅРѕ
+ * РїСЂРµРІС‹С€Р°С‚СЊ СѓРєР°Р·Р°РЅРЅРѕРµ РѕРіСЂР°РЅРёС‡РµРЅРёРµ
  */
 if ($maxcount > 0 && count($response['files']) > $maxcount) {
-	$response['errors'][] = 'Превышен лимит количества файлов (отправлено '.count($response['files']).')';
+	$response['errors'][] = 'РџСЂРµРІС‹С€РµРЅ Р»РёРјРёС‚ РєРѕР»РёС‡РµСЃС‚РІР° С„Р°Р№Р»РѕРІ (РѕС‚РїСЂР°РІР»РµРЅРѕ '.count($response['files']).')';
 	if ($debug) {
-		$modx->log(modX::LOG_LEVEL_ERROR, 'Превышен лимит количества файлов (отправлено '.count($response['files']).')');
+		$modx->log(modX::LOG_LEVEL_ERROR, 'РџСЂРµРІС‹С€РµРЅ Р»РёРјРёС‚ РєРѕР»РёС‡РµСЃС‚РІР° С„Р°Р№Р»РѕРІ (РѕС‚РїСЂР°РІР»РµРЅРѕ '.count($response['files']).')');
 	}
 	return $response;
 }
 /**
- * Если указано минимальное количество файлов, то количество загружаемых файлов не должно
- * быть меньше указанного ограничения
+ * Р•СЃР»Рё СѓРєР°Р·Р°РЅРѕ РјРёРЅРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ С„Р°Р№Р»РѕРІ, С‚Рѕ РєРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РіСЂСѓР¶Р°РµРјС‹С… С„Р°Р№Р»РѕРІ РЅРµ РґРѕР»Р¶РЅРѕ
+ * Р±С‹С‚СЊ РјРµРЅСЊС€Рµ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РѕРіСЂР°РЅРёС‡РµРЅРёСЏ
  */
 if (count($response['files']) < $mincount) {
-	$response['errors'][] = 'Не загружено необходимое количество файлов (отправлено '.count($response['files']).')';
+	$response['errors'][] = 'РќРµ Р·Р°РіСЂСѓР¶РµРЅРѕ РЅРµРѕР±С…РѕРґРёРјРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ С„Р°Р№Р»РѕРІ (РѕС‚РїСЂР°РІР»РµРЅРѕ '.count($response['files']).')';
 	if ($debug) {
-		$modx->log(modX::LOG_LEVEL_ERROR, 'Не загружено необходимое количество файлов (отправлено '.count($response['files']).')');
+		$modx->log(modX::LOG_LEVEL_ERROR, 'РќРµ Р·Р°РіСЂСѓР¶РµРЅРѕ РЅРµРѕР±С…РѕРґРёРјРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ С„Р°Р№Р»РѕРІ (РѕС‚РїСЂР°РІР»РµРЅРѕ '.count($response['files']).')');
 	}
 	return $response;
 }
 
 $ds = DIRECTORY_SEPARATOR;
-/* Место сохранения */
+/* РњРµСЃС‚Рѕ СЃРѕС…СЂР°РЅРµРЅРёСЏ */
 $targetPath = $_SERVER['DOCUMENT_ROOT'].$ds.$dir.$ds;
 $targetPath = str_replace($ds.$ds, $ds, $targetPath);
 /**
- * URL каталога, содержащего файлы
+ * URL РєР°С‚Р°Р»РѕРіР°, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ С„Р°Р№Р»С‹
  */
 $dirUrl = str_replace($_SERVER['DOCUMENT_ROOT'], 'http://'.$_SERVER['HTTP_HOST'], $targetPath);
 if (!is_dir($targetPath)) {
 	mkdir($targetPath, 777, true);
 }
 if (!is_dir($targetPath)) {
-	$response['errors'][] = 'Неверный каталог загрузки';
+	$response['errors'][] = 'РќРµРІРµСЂРЅС‹Р№ РєР°С‚Р°Р»РѕРі Р·Р°РіСЂСѓР·РєРё';
 	if ($debug) {
-		$modx->log(modX::LOG_LEVEL_ERROR, 'Неверный каталог загрузки');
+		$modx->log(modX::LOG_LEVEL_ERROR, 'РќРµРІРµСЂРЅС‹Р№ РєР°С‚Р°Р»РѕРі Р·Р°РіСЂСѓР·РєРё');
 	}
 	return $response;
 }
 
 /**
- * Проверка массива файлов
+ * РџСЂРѕРІРµСЂРєР° РјР°СЃСЃРёРІР° С„Р°Р№Р»РѕРІ
  */
 foreach ($response['files'] as $k => &$file) {
 	if ($file['error']) {
-		$response['errors'][] = 'Ошибка при загрузке файла '.$file['name'].': '.getFileUploadErrorDescription($file['error']);
+		$response['errors'][] = 'РћС€РёР±РєР° РїСЂРё Р·Р°РіСЂСѓР·РєРµ С„Р°Р№Р»Р° '.$file['name'].': '.getFileUploadErrorDescription($file['error']);
 		if ($debug) {
-			$modx->log(modX::LOG_LEVEL_ERROR, 'Ошибка при загрузке файла '.$file['name']);
+			$modx->log(modX::LOG_LEVEL_ERROR, 'РћС€РёР±РєР° РїСЂРё Р·Р°РіСЂСѓР·РєРµ С„Р°Р№Р»Р° '.$file['name']);
 		}
 		return $response;
 	}
 	if ($file['size'] > $size) {
-		$response['errors'][] = 'Файл '.$file['name'].' слишком большой';
+		$response['errors'][] = 'Р¤Р°Р№Р» '.$file['name'].' СЃР»РёС€РєРѕРј Р±РѕР»СЊС€РѕР№';
 		if ($debug) {
-			$modx->log(modX::LOG_LEVEL_ERROR, 'Файл '.$file['name'].' слишком большой');
+			$modx->log(modX::LOG_LEVEL_ERROR, 'Р¤Р°Р№Р» '.$file['name'].' СЃР»РёС€РєРѕРј Р±РѕР»СЊС€РѕР№');
 		}
 		return $response;
 	}
 	/**
-	 * Расширение файла
+	 * Р Р°СЃС€РёСЂРµРЅРёРµ С„Р°Р№Р»Р°
 	 */
 	$extension = getFileExtension($file['name']);
 	/**
-	 * Массив разрешённых расширений файлов
+	 * РњР°СЃСЃРёРІ СЂР°Р·СЂРµС€С‘РЅРЅС‹С… СЂР°СЃС€РёСЂРµРЅРёР№ С„Р°Р№Р»РѕРІ
 	 */
 	$allowedExtensions = explode(',', $types);
 	/**
-	 * Разрешён ли файл данного типа к загрузке
+	 * Р Р°Р·СЂРµС€С‘РЅ Р»Рё С„Р°Р№Р» РґР°РЅРЅРѕРіРѕ С‚РёРїР° Рє Р·Р°РіСЂСѓР·РєРµ
 	 */
 	if (!in_array($extension, $allowedExtensions)) {
-		$response['errors'][] = 'Файл '.$file['name'].' (расширение '.$extension.') запрещён к загрузке';
+		$response['errors'][] = 'Р¤Р°Р№Р» '.$file['name'].' (СЂР°СЃС€РёСЂРµРЅРёРµ '.$extension.') Р·Р°РїСЂРµС‰С‘РЅ Рє Р·Р°РіСЂСѓР·РєРµ';
 		if ($debug) {
-			$modx->log(modX::LOG_LEVEL_ERROR, 'Файл '.$file['name'].' запрещён к загрузке');
+			$modx->log(modX::LOG_LEVEL_ERROR, 'Р¤Р°Р№Р» '.$file['name'].' Р·Р°РїСЂРµС‰С‘РЅ Рє Р·Р°РіСЂСѓР·РєРµ');
 		}
 		return $response;
 	}
 }
 
 /**
- * Перемещение файлов
+ * РџРµСЂРµРјРµС‰РµРЅРёРµ С„Р°Р№Р»РѕРІ
  */
-$fileUrls = array();
+$fileUrls = [];
 foreach ($response['files'] as $k => &$file) {
-	// Временное имя файла
+	// Р’СЂРµРјРµРЅРЅРѕРµ РёРјСЏ С„Р°Р№Р»Р°
 	$tempFile = $file['tmp_name'];
-	// Полный адрес файла
+	// РџРѕР»РЅС‹Р№ Р°РґСЂРµСЃ С„Р°Р№Р»Р°
 	$extension = getFileExtension($file['name']);
 	$filename = genFilename().'.'.$extension;
 	$file['filename'] = $filename;
 	$targetFile =  $targetPath.$filename;
 
-	/* Если не удалось переместить файл */
+	/* Р•СЃР»Рё РЅРµ СѓРґР°Р»РѕСЃСЊ РїРµСЂРµРјРµСЃС‚РёС‚СЊ С„Р°Р№Р» */
 	if (!move_uploaded_file($tempFile, $targetFile)) {
-		$response['errors'][] = 'Не удалось загрузить файл '.$file['name'];
+		$response['errors'][] = 'РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ С„Р°Р№Р» '.$file['name'];
 		if (!is_writable($targetPath)) {
-			$response['errors'][] = 'Каталог не доступен для записи';
+			$response['errors'][] = 'РљР°С‚Р°Р»РѕРі РЅРµ РґРѕСЃС‚СѓРїРµРЅ РґР»СЏ Р·Р°РїРёСЃРё';
 		}
 		if ($debug) {
-			$modx->log(modX::LOG_LEVEL_ERROR, 'Не удалось загрузить файл '.$file['name']." $tempFile to $targetFile");
+			$modx->log(modX::LOG_LEVEL_ERROR, 'РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ С„Р°Р№Р» '.$file['name']." $tempFile to $targetFile");
 		}
 		return $response;
 	}
@@ -257,12 +257,12 @@ $response['placeholders']['files'] = implode(',', $fileUrls);
 if (!count($response['errors'])) {
 	$response['success'] = true;
 	if (count($response['files']) == 1) {
-		$response['messages'][] = 'Файл успешно загружен';
+		$response['messages'][] = 'Р¤Р°Р№Р» СѓСЃРїРµС€РЅРѕ Р·Р°РіСЂСѓР¶РµРЅ';
 	} elseif (count($response['files']) > 1) {
-		$response['messages'][] = 'Все файлы успешно загружены';
+		$response['messages'][] = 'Р’СЃРµ С„Р°Р№Р»С‹ СѓСЃРїРµС€РЅРѕ Р·Р°РіСЂСѓР¶РµРЅС‹';
 	}
 	if ($debug) {
-		$modx->log(modX::LOG_LEVEL_ERROR, 'Все файлы ('.count($response['files']).') успешно загружены');
+		$modx->log(modX::LOG_LEVEL_ERROR, 'Р’СЃРµ С„Р°Р№Р»С‹ ('.count($response['files']).') СѓСЃРїРµС€РЅРѕ Р·Р°РіСЂСѓР¶РµРЅС‹');
 	}
 }
 

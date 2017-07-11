@@ -9,45 +9,49 @@ $response = [
 ];
 
 /**
- * Шаблон письма
+ * РЁР°Р±Р»РѕРЅ РїРёСЃСЊРјР° РІ С„РѕСЂРјР°С‚Рµ HTML
  */
 $emailTpl = $modx->getOption('emailTpl', $scriptProperties, false);
 /**
- * Шаблон письма, отправляемого тому, кто отправил форму
+ * РЁР°Р±Р»РѕРЅ С‚РµРєСЃС‚РѕРІРѕРіРѕ РїРёСЃСЊРјР°
+ */
+$emailTextTpl = $modx->getOption('emailTextTpl', $scriptProperties, false);
+/**
+ * РЁР°Р±Р»РѕРЅ РїРёСЃСЊРјР°, РѕС‚РїСЂР°РІР»СЏРµРјРѕРіРѕ С‚РѕРјСѓ, РєС‚Рѕ РѕС‚РїСЂР°РІРёР» С„РѕСЂРјСѓ
  */
 $emailTplFeedback = $modx->getOption('emailTplFeedback', $scriptProperties, false);
 /**
- * Адреса получателей через запятую
+ * РђРґСЂРµСЃР° РїРѕР»СѓС‡Р°С‚РµР»РµР№ С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ
  */
 $emailTo = $modx->getOption('emailTo', $scriptProperties, $modx->getOption('emailsender'));
 /**
- * Адреса получателей через запятую
+ * РђРґСЂРµСЃР° РїРѕР»СѓС‡Р°С‚РµР»РµР№ С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ
  */
 $emailToFeedback = $modx->getOption('email', $_POST, '');
 /**
- * Тема письма
+ * РўРµРјР° РїРёСЃСЊРјР°
  */
 $emailSubject = $modx->getOption('emailSubject', $scriptProperties, false);
 /**
- * Тема письма, отправляемого тому, кто отправил форму
+ * РўРµРјР° РїРёСЃСЊРјР°, РѕС‚РїСЂР°РІР»СЏРµРјРѕРіРѕ С‚РѕРјСѓ, РєС‚Рѕ РѕС‚РїСЂР°РІРёР» С„РѕСЂРјСѓ
  */
 $emailSubjectFeedback = $modx->getOption('emailSubjectFeedback', $scriptProperties, $emailSubject);
 /**
- * Адрес электронной почты отправителя
+ * РђРґСЂРµСЃ СЌР»РµРєС‚СЂРѕРЅРЅРѕР№ РїРѕС‡С‚С‹ РѕС‚РїСЂР°РІРёС‚РµР»СЏ
  */
 $emailSenderEmail = $modx->getOption('emailSenderEmail', $scriptProperties, $modx->getOption('emailsender'));
 /**
- * Имя отправителя
+ * РРјСЏ РѕС‚РїСЂР°РІРёС‚РµР»СЏ
  */
 $emailSenderName = $modx->getOption('emailSenderName', $scriptProperties, $modx->getOption('site_name'));
 /**
- * Плейсхолдеры для передачи в шаблон письма
+ * РџР»РµР№СЃС…РѕР»РґРµСЂС‹ РґР»СЏ РїРµСЂРµРґР°С‡Рё РІ С€Р°Р±Р»РѕРЅ РїРёСЃСЊРјР°
  */
 $placeholders = $modx->getOption('placeholders', $scriptProperties, []);
 $placeholders['subject'] = $emailSubject;
 
 /**
- * Информация о сервере
+ * РРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃРµСЂРІРµСЂРµ
  */
 $placeholderServer = [];
 if (isset($_SERVER) && is_array($_SERVER)) {
@@ -61,42 +65,48 @@ $placeholders['quasiform']['server'] = $placeholderServer;
 $placeholders['quasiform']['serverArray'] = print_r($placeholderServer, true);
 
 /**
- * Если пустой адрес основного получателя
+ * Р•СЃР»Рё РїСѓСЃС‚РѕР№ Р°РґСЂРµСЃ РѕСЃРЅРѕРІРЅРѕРіРѕ РїРѕР»СѓС‡Р°С‚РµР»СЏ
  */
 if (empty($emailTo)) {
 	if ($debug) {
-		$modx->log(modX::LOG_LEVEL_ERROR, 'quasiEmail: пустой адрес основного получателя');
+		$modx->log(modX::LOG_LEVEL_ERROR, 'quasiEmail: РїСѓСЃС‚РѕР№ Р°РґСЂРµСЃ РѕСЃРЅРѕРІРЅРѕРіРѕ РїРѕР»СѓС‡Р°С‚РµР»СЏ');
 	}
-	$response['errors'][] = 'Пустой адрес основного получателя';
+	$response['errors'][] = 'РџСѓСЃС‚РѕР№ Р°РґСЂРµСЃ РѕСЃРЅРѕРІРЅРѕРіРѕ РїРѕР»СѓС‡Р°С‚РµР»СЏ';
 	return $response;
 }
 /**
- * Если пустой адрес основного отправителя
+ * Р•СЃР»Рё РїСѓСЃС‚РѕР№ Р°РґСЂРµСЃ РѕСЃРЅРѕРІРЅРѕРіРѕ РѕС‚РїСЂР°РІРёС‚РµР»СЏ
  */
 if (empty($emailSenderEmail)) {
 	if ($debug) {
-		$modx->log(modX::LOG_LEVEL_ERROR, 'quasiEmail: пустой адрес основного отправителя');
+		$modx->log(modX::LOG_LEVEL_ERROR, 'quasiEmail: РїСѓСЃС‚РѕР№ Р°РґСЂРµСЃ РѕСЃРЅРѕРІРЅРѕРіРѕ РѕС‚РїСЂР°РІРёС‚РµР»СЏ');
 	}
-	$response['errors'][] = 'Пустой адрес основного отправителя';
+	$response['errors'][] = 'РџСѓСЃС‚РѕР№ Р°РґСЂРµСЃ РѕСЃРЅРѕРІРЅРѕРіРѕ РѕС‚РїСЂР°РІРёС‚РµР»СЏ';
 	return $response;
 }
 
 
 
 /**
- * Если нет ошибок, то попытка отправки письмо
+ * Р•СЃР»Рё РЅРµС‚ РѕС€РёР±РѕРє, С‚Рѕ РїРѕРїС‹С‚РєР° РѕС‚РїСЂР°РІРєРё РїРёСЃСЊРјРѕ
  */
 if (!count($response['errors'])) {
 	/**
-	 * Отправка основного письма
+	 * РћС‚РїСЂР°РІРєР° РѕСЃРЅРѕРІРЅРѕРіРѕ РїРёСЃСЊРјР°
 	 */
-	$messageText = (!empty($emailTpl)) ? $modx->getChunk($emailTpl, $placeholders) : '';
+	$messageHtml = (!empty($emailTpl)) ? $modx->getChunk($emailTpl, $placeholders) : '';
+	$messageText = (!empty($emailTextTpl)) ? $modx->getChunk($emailTextTpl, $placeholders) : '';
     $modx->getService('mail', 'mail.modPHPMailer');
     $modx->mail->setHTML(true);
-    $modx->mail->set(modMail::MAIL_BODY, $messageText);
+    $modx->mail->set(modMail::MAIL_BODY, $messageHtml);
+    if (!empty($messageText)) {
+    	$modx->mail->set(modMail::MAIL_BODY_TEXT, $messageText);
+    }
+    $modx->mail->set(modMail::MAIL_CHARSET, 'utf-8');
     $modx->mail->set(modMail::MAIL_FROM, $emailSenderEmail);
     $modx->mail->set(modMail::MAIL_FROM_NAME, $emailSenderName);
     $modx->mail->set(modMail::MAIL_SUBJECT, $emailSubject);
+    $modx->mail->set(modMail::MAIL_ENCODING, '8bit');
     $emails = explode(',', $emailTo);
     if (is_array($emails)) {
 	    foreach ($emails as $email) {
@@ -109,15 +119,15 @@ if (!count($response['errors'])) {
     $modx->mail->address('reply-to', $emailSenderEmail);
     if ($modx->mail->send()) {
         $response['success'] = true;
-		$response['messages'][] = 'Сообщение успешно отправлено';
+		$response['messages'][] = 'РЎРѕРѕР±С‰РµРЅРёРµ СѓСЃРїРµС€РЅРѕ РѕС‚РїСЂР°РІР»РµРЅРѕ';
 		/**
-		 * Если основное письмо отправлено успешно, то отправляется дополнительное — отправившему форму
+		 * Р•СЃР»Рё РѕСЃРЅРѕРІРЅРѕРµ РїРёСЃСЊРјРѕ РѕС‚РїСЂР°РІР»РµРЅРѕ СѓСЃРїРµС€РЅРѕ, С‚Рѕ РѕС‚РїСЂР°РІР»СЏРµС‚СЃСЏ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ вЂ” РѕС‚РїСЂР°РІРёРІС€РµРјСѓ С„РѕСЂРјСѓ
 		 */
     } else {
  		if ($debug) {
-			$modx->log(modX::LOG_LEVEL_ERROR, 'quasiEmail: не удалось отправить основное письмо');
+			$modx->log(modX::LOG_LEVEL_ERROR, 'quasiEmail: РЅРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РїСЂР°РІРёС‚СЊ РѕСЃРЅРѕРІРЅРѕРµ РїРёСЃСЊРјРѕ');
 		}
-		$response['errors'][] = 'Ошибка при отправке письма';
+		$response['errors'][] = 'РћС€РёР±РєР° РїСЂРё РѕС‚РїСЂР°РІРєРµ РїРёСЃСЊРјР°';
     }
 }
 
