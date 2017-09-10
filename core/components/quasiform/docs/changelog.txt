@@ -1,5 +1,10 @@
 Changelog for quasiForm.
 
+quasiForm 2.2.0 pl
+==============
+* Reset emails of recipients after send.
+* Fix small bugs.
+
 quasiForm 2.1.0 pl
 ==============
 * Code.

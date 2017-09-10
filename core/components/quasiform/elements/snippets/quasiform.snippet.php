@@ -7,10 +7,10 @@
 $fields = $modx->fromJSON($modx->getOption('fields', $scriptProperties, false));
 $messageSuccess = $modx->getOption('messageSuccess', $scriptProperties, 'Ваше сообщение успешно отправлено. Спасибо.');
 $messageError = $modx->getOption('messageError', $scriptProperties, 'Форма заполнена с ошибками. Исправьте их и отправьте снова.');
-$hooks = $modx->fromJSON($modx->getOption('hooks', $scriptProperties, false));
+$hooks = $modx->fromJSON($modx->getOption('hooks', $scriptProperties, []));
 $debug = $modx->getOption('debug', $scriptProperties, false);
 
-$placeholders = array();
+$placeholders = [];
 
 $post = $_POST;
 /**
@@ -64,6 +64,7 @@ if (is_array($fields)) {
 							$response['field_errors'][$fieldName][] = 'Поле «'.$fieldLabel.'» должно быть адресом электронной почты';
 						}
 					}
+					break;
 				/**
 				 * Значение поля должно быть равно какому-то определённому значению
 				 * "equal":"2015"
@@ -125,19 +126,21 @@ if (is_array($fields)) {
 
 // Если поля прошли валидацию, то вызываются плагины-сниппеты
 if (!count($response['errors']) && !count($response['field_errors'])) {
-	// Список плагинов-сниппетов, которые должны выполниться после валидации полей
+	// Список сниппетов, которые должны выполниться после валидации полей
+	if ($debug) {
+		$response['hooks'] = $hooks;
+	}
 	if (is_array($hooks)) {
-		foreach ($hooks as $hookName => &$hookProperties) {
-			if ($debug) {
-				$response['hooks'][] = $hookName;
-			}
+		foreach ($hooks as $hook) {
 			/**
 			 * Параметры для передачи в плагин-сниппет
 			 */
+			$hookProperties = $hook['options'];
+			$hookName = $hook['name'];
 			if (is_array($hookProperties)) {
-				$properties = array_merge($hookProperties, array('placeholders' => $placeholders));
+				$properties = array_merge($hookProperties, ['placeholders' => $placeholders]);
 			} else {
-				$properties = array('placeholders' => $placeholders);
+				$properties = ['placeholders' => $placeholders];
 			}
 			if ($debug) {
 				$response['properties'][] = $properties;
@@ -157,9 +160,15 @@ if (!count($response['errors']) && !count($response['field_errors'])) {
 						$response['messages'][] = $responseMessage;
 					}
 				}
-				if (is_array($hookResponse['placeholders'])) {
+				if (array_key_exists('placeholders', $hookResponse) && is_array($hookResponse['placeholders'])) {
 					foreach ($hookResponse['placeholders'] as $placeholderName => &$placeholderValue) {
 						$placeholders[$placeholderName] = $placeholderValue;
+					}
+				} else {
+					if ($debug) {
+						$modx->log(xPDO::LOG_LEVEL_ERROR, 'Hook "'.$hookName.'" not returned placeholders in response');
+						$modx->log(xPDO::LOG_LEVEL_ERROR, 'Hook response:');
+						$modx->log(xPDO::LOG_LEVEL_ERROR, print_r($hookResponse, true));
 					}
 				}
 				/**

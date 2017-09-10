@@ -1,5 +1,7 @@
 <?php
 $debug = $modx->getOption('debug', $scriptProperties, false);
+$messageSuccess = $modx->getOption('messageSuccess', $scriptProperties, 'Ваше сообщение успешно отправлено. Спасибо.');
+$messageError = $modx->getOption('messageError', $scriptProperties, 'Форма заполнена с ошибками. Исправьте их и отправьте снова.');
 
 $response = [
 	'errors' => [],
@@ -17,25 +19,13 @@ $emailTpl = $modx->getOption('emailTpl', $scriptProperties, false);
  */
 $emailTextTpl = $modx->getOption('emailTextTpl', $scriptProperties, false);
 /**
- * Шаблон письма, отправляемого тому, кто отправил форму
- */
-$emailTplFeedback = $modx->getOption('emailTplFeedback', $scriptProperties, false);
-/**
  * Адреса получателей через запятую
  */
 $emailTo = $modx->getOption('emailTo', $scriptProperties, $modx->getOption('emailsender'));
 /**
- * Адреса получателей через запятую
- */
-$emailToFeedback = $modx->getOption('email', $_POST, '');
-/**
  * Тема письма
  */
 $emailSubject = $modx->getOption('emailSubject', $scriptProperties, false);
-/**
- * Тема письма, отправляемого тому, кто отправил форму
- */
-$emailSubjectFeedback = $modx->getOption('emailSubjectFeedback', $scriptProperties, $emailSubject);
 /**
  * Адрес электронной почты отправителя
  */
@@ -119,7 +109,7 @@ if (!count($response['errors'])) {
     $modx->mail->address('reply-to', $emailSenderEmail);
     if ($modx->mail->send()) {
         $response['success'] = true;
-		$response['messages'][] = 'Сообщение успешно отправлено';
+		$response['messages'][] = $messageSuccess;
 		/**
 		 * Если основное письмо отправлено успешно, то отправляется дополнительное — отправившему форму
 		 */
@@ -127,8 +117,9 @@ if (!count($response['errors'])) {
  		if ($debug) {
 			$modx->log(modX::LOG_LEVEL_ERROR, 'quasiEmail: не удалось отправить основное письмо');
 		}
-		$response['errors'][] = 'Ошибка при отправке письма';
+		$response['errors'][] = $messageError;
     }
+    $modx->mail->reset();
 }
 
 return $response;
