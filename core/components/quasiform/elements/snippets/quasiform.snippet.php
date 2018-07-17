@@ -149,6 +149,11 @@ if (!count($response['errors']) && !count($response['field_errors'])) {
 			 * Вызов плагина-сниппета
 			 */
 			$hookResponse = $modx->runSnippet($hookName, $properties);
+			if ($debug) {
+				$modx->log(xPDO::LOG_LEVEL_ERROR, 'run snippet '.$hookName);
+				$modx->log(xPDO::LOG_LEVEL_ERROR, print_r($properties, true));
+			}
+			
 			if (is_array($hookResponse)) {
 				if (is_array($hookResponse['errors'])) {
 					foreach ($hookResponse['errors'] as &$responseError) {
@@ -164,12 +169,10 @@ if (!count($response['errors']) && !count($response['field_errors'])) {
 					foreach ($hookResponse['placeholders'] as $placeholderName => &$placeholderValue) {
 						$placeholders[$placeholderName] = $placeholderValue;
 					}
-				} else {
-					if ($debug) {
-						$modx->log(xPDO::LOG_LEVEL_ERROR, 'Hook "'.$hookName.'" not returned placeholders in response');
-						$modx->log(xPDO::LOG_LEVEL_ERROR, 'Hook response:');
-						$modx->log(xPDO::LOG_LEVEL_ERROR, print_r($hookResponse, true));
-					}
+				}
+				if ($debug) {
+					$modx->log(xPDO::LOG_LEVEL_ERROR, 'Hook response:');
+					$modx->log(xPDO::LOG_LEVEL_ERROR, print_r($hookResponse, true));
 				}
 				/**
 				 * Если плагин-сниппет завершился ошибкой, прекращается выполнение последующих плагинов

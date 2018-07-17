@@ -1,5 +1,6 @@
 <?php
 $debug = $modx->getOption('debug', $scriptProperties, false);
+$force = $modx->getOption('force', $scriptProperties, false);
 $messageSuccess = $modx->getOption('messageSuccess', $scriptProperties, 'Ваше сообщение успешно отправлено. Спасибо.');
 $messageError = $modx->getOption('messageError', $scriptProperties, 'Форма заполнена с ошибками. Исправьте их и отправьте снова.');
 
@@ -117,9 +118,14 @@ if (!count($response['errors'])) {
  		if ($debug) {
 			$modx->log(modX::LOG_LEVEL_ERROR, 'quasiEmail: не удалось отправить основное письмо');
 		}
-		$response['errors'][] = $messageError;
+		if (!$force) {
+			$response['errors'][] = $messageError;
+		}
     }
     $modx->mail->reset();
+    if ($force) {
+    	$response['success'] = true;
+    }
 }
 
 return $response;
