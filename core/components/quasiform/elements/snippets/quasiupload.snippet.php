@@ -30,7 +30,6 @@ $response = [
 	'errors' => [],
 	'success' => false,
 	'files' => [],
-	'messages' => [],
 	'placeholders' => [],
 ];
 

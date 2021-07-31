@@ -1,57 +1,34 @@
 <?php
+$formSave = $modx->getService('formsave', 'FormSave', $modx->getOption('formsave.core_path', null, $modx->getOption('core_path').'components/formsave/').'model/formsave/', []);
+
 $response = [
 	'errors' => [],
+	'placeholders' => [],
 	'success' => false,
-	'message' => '',
-	'messages' => [],
 ];
 
-// Load the FormSave class
-$formSave = $modx->getService('formsave','FormSave', $modx->getOption('formsave.core_path', null, $modx->getOption('core_path').'components/formsave/').'model/formsave/', array());
-
-$formTopic = $modx->getOption('fsFormTopic', $scriptProperties, 'form');
-$formFields = $modx->getOption('fsFormFields', $scriptProperties, false);
-$formPublished = (int)$modx->getOption('fsFormPublished', $scriptProperties, 1);
-
-if ($formFields !== false) {
-	$formFields = explode(',', $formFields);
-	foreach($formFields as $key => $value) {
-		$formFields[$key] = trim($value);
-	}
-}
-
-// Create new form object
-$newForm = $modx->newObject('fsForm');
-
-// Build the data array
-$dataArray = [];
-
+$topic = $modx->getOption('topic', $scriptProperties);
 $values = $_POST;
 
-if (is_array($formFields)) {
-	foreach($formFields as $field) {
-		if (!isset($values[$field])) {
-			// Add empty field
-			$dataArray[$field] = '';
-			continue;
-		}
-		$dataArray[$field] = $values[$field];
-	}
+$newForm = $modx->newObject('fsForm');
+
+$dataArray = [];
+foreach($values as $fieldName => $fieldValue) {
+	$dataArray[$fieldName] = $fieldValue;
 }
 
-
-// Fill the database object
 $newForm->fromArray([
-	'topic' => $formTopic,
+	'topic' => $topic,
 	'time' => time(),
-	'published' => $formPublished,
+	'published' => 1,
 	'data' => $dataArray,
-	'ip' => $_SERVER['REMOTE_ADDR']
+	'ip' => $_SERVER['REMOTE_ADDR'],
 ]);
 
-// Save the form
 if ($newForm->save()) {
     $response['success'] = true;
+} else {
+	$modx->log(xPDO::LOG_LEVEL_ERROR, 'quasiFormSave | Не получилось сохранить форму');
 }
 
 return $response;
