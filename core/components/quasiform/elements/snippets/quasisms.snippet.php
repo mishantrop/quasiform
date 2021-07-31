@@ -1,15 +1,11 @@
 <?php
-/**
- * Режим отладки
- * Сообщения складываются только в каталог /sms/%H%i%s.txt
- */
+// Режим отладки
 $debug = $modx->getOption('debug', $scriptProperties, false);
 
 $response = [
-	'success' => false,
 	'errors' => [],
-	'messages' => $modx->getOption('messages', $scriptProperties, []),
-	'placeholders' => $modx->getOption('placeholders', $scriptProperties, []),
+	'placeholders' => [],
+	'success' => false,
 ];
 /**
  * API-ключ

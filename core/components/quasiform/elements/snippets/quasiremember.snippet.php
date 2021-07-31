@@ -3,11 +3,7 @@
  * Имя отправленного поля
  * Если передан этот параметр, то сниппет вернёт содержимое $_SESSION['quasiform']['key']
  */
-$key = $modx->getOption('key', $scriptProperties, false);
-/**
- * Режим отладки
- */
-$debug = $modx->getOption('debug', $scriptProperties, false);
+$key = $modx->getOption('key', $scriptProperties);
 
 /**
  * Вернуть значение из сессии
@@ -23,10 +19,8 @@ if (strlen($key)) {
 
 $response = [
 	'errors' => [],
+	'placeholders' => [],
 	'success' => false,
-	'message' => '',
-	'messages' => [],
-	'placeholders' => $modx->getOption('placeholders', $scriptProperties, []),
 ];
 
 /**

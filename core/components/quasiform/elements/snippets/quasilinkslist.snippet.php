@@ -2,16 +2,19 @@
 if (!isset($input) || empty($input)) {
     return '';
 }
-$output = '';
+
 $items = explode(',', $input);
+
+$output = '';
+$itemsOutput = '';
+
 if (is_array($items) && count($items) > 0) {
-    $output .= '<ul>';
-    foreach ($items as &$item)
-    {
+    foreach ($items as &$item) {
 		$anchor = str_replace('http://', '', $item);
 		$anchor = str_replace('https://', '', $anchor);
-        $output .= '<li><a href="'.$item.'">'.$anchor.'</a></li>';
+        $itemsOutput .= '<li><a href="'.$item.'">'.$anchor.'</a></li>';
     }
-    $output .= '</ul>';
+    $output = '<ul>'.$itemsOutput.'</ul>';
 }
+
 return $output;

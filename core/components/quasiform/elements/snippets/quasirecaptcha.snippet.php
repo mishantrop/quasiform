@@ -3,30 +3,19 @@ $messageError = $modx->getOption('messageError', $scriptProperties, 'Ты роб
 
 $response = [
 	'errors' => [],
+	'placeholders' => [],
 	'success' => false,
-	'message' => '',
-	'messages' => [],
 ];
 
-/**
- * Ключ
- */
+// Ключ
 $key = $modx->getOption('key', $scriptProperties, false);
-/**
- * Секретный ключ
- */
+// Секретный ключ
 $secret = $modx->getOption('secret', $scriptProperties, false);
-/**
- * Режим отладки
- * Если включён, то в журнал ошибок записывается отладочная информация
- */
 $debug = $modx->getOption('debug', $scriptProperties, false);
 
 if (!function_exists('sendRecaptchaRequest')) {
-	/**
-	 * Функция отправки запроса на верификацию reCAPTCHA
-	 */
-	function sendRecaptchaRequest($secret, $response, $remoteip) {
+	// Функция отправки запроса на верификацию reCAPTCHA
+	function sendRecaptchaRequest(string $secret, array $response, string $remoteip) {
 		$ch = curl_init('https://www.google.com/recaptcha/api/siteverify');
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
 		curl_setopt($ch, CURLOPT_TIMEOUT, 4);
