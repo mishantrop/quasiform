@@ -1,5 +1,4 @@
 <?php
-$modx->log(xPDO::LOG_LEVEL_ERROR, 'QUASIFORM START '.time());
 /**
  * Параметры
  * @param debug Включён ли режим отладки
@@ -40,11 +39,25 @@ if (!is_array($fields)) {
 	$modx->log(xPDO::LOG_LEVEL_ERROR, 'quasiForm | fields parameter is not an array; type: '.gettype($fields));
 }
 
+// Модификация данных
+foreach ($fields as $field) {
+	$fieldName = $field['name'];
+	$fieldModifiers = isset($field['modifiers']) ? $field['modifiers'] : [];
+	$fieldValue = $requestData[$fieldName];
+
+	foreach ($fieldModifiers as $modifier) {
+		if (function_exists($modifier)) {
+			$requestData[$fieldName] = call_user_func($modifier, $fieldValue);
+		} else {
+			$modx->log(xPDO::LOG_LEVEL_ERROR, 'quasiForm | Modifier function does not exists: '.$modifier);
+		}
+	}
+}
+
 // Валидация данных
 foreach ($fields as $field) {
 	$fieldName = $field['name'];
 	$fieldValidators = isset($field['validators']) ? $field['validators'] : [];
-	$fieldModifiers = isset($field['modifiers']) ? $field['modifiers'] : [];
 	$fieldValue = $requestData[$fieldName];
 	$fieldLabel = isset($field['label']) ? $field['label'] : $fieldName;
 
