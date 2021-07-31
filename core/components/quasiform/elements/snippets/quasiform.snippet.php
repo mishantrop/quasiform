@@ -1,5 +1,4 @@
 <?php
-$modx->log(xPDO::LOG_LEVEL_ERROR, 'QUASIFORM START '.time());
 /**
  * Параметры
  * @param debug Включён ли режим отладки
@@ -55,7 +54,6 @@ foreach ($fields as $field) {
 		}
 	}
 }
-$modx->log(xPDO::LOG_LEVEL_ERROR, print_r($requestData, true));
 
 // Валидация данных
 foreach ($fields as $field) {
